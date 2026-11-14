@@ -1,0 +1,38 @@
+name: BNB Instagram sync
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # every hour at :17 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: bnb-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      DRIVE_ROOT: ${{ secrets.DRIVE_FOLDER_ID }}
+      PROFILE: https://www.instagram.com/bnbbutixfabric/
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          pip install --quiet gallery-dl
+          curl -fsSL https://rclone.org/install.sh | sudo bash >/dev/null
+
+      - name: Write credentials
+        env:
+          IG_COOKIES: ${{ secrets.IG_COOKIES }}
+          RCLONE_TOKEN: ${{ secrets.RCLONE_TOKEN }}
+        run: bash scripts/setup_creds.sh
+
+      - name: Download new posts and upload to Drive
+        run: bash scripts/sync.sh
+
+      - name: Upload status
+        if: always()
+        run: bash scripts/status.sh "${{ job.status }}"
