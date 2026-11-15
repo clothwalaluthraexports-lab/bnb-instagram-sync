@@ -12,10 +12,9 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 58
     env:
       DRIVE_ROOT: ${{ secrets.DRIVE_FOLDER_ID }}
-      PROFILE: https://www.instagram.com/bnbbutixfabric/
     steps:
       - uses: actions/checkout@v4
 
