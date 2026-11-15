@@ -34,7 +34,10 @@ for _ in range(3):
 if not (isinstance(t, dict) and t.get("refresh_token")):
     sys.exit(1)
 print(json.dumps(t))
-' ) || { echo "::error::RCLONE_TOKEN could not be read: paste everything rclone printed between ---> and <---End paste"; exit 1; }
+' ) || { printf '%s' "$RCLONE_TOKEN" | python3 -c '
+import sys,re
+r=sys.stdin.read(); s=r.strip()
+print("RCLONE_TOKEN shape (no secret shown): length=%d lines=%d starts_with_brace=%s starts_with_eyJ=%s starts_with_ya29=%s mentions_refresh_token=%s has_paste_markers=%s" % (len(r), r.count(chr(10))+1, s[:1]=="{", s[:3]=="eyJ", s[:4]=="ya29", "refresh_token" in r, "--->" in r))'; echo "::error::RCLONE_TOKEN could not be read: paste everything rclone printed between ---> and <---End paste"; exit 1; }
 mkdir -p ~/.config/rclone
 cat > ~/.config/rclone/rclone.conf <<CONF
 [gdrive]
