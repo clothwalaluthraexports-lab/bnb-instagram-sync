@@ -1,18 +1,26 @@
 # bnb-instagram-sync
 
-Hourly GitHub Actions job that downloads new images and videos from the Instagram
-profiles listed in `profiles.txt` and saves them to the fabricshoot Google Drive folder `BNB`
-(`images/`, `bnb-archive.sqlite3`, `status.txt`). No computer needs to stay on.
+Scheduled GitHub Actions job that downloads new images and videos from the
+sources listed in `sources.txt` (Instagram profiles, Pinterest boards and
+searches) and saves each source to its own folder in the fabricshoot Google
+Drive, under `Reference Downloads/`. No computer needs to stay on.
 
-## Secrets (Settings → Secrets and variables → Actions)
-- `IG_COOKIES` – full text of an exported Instagram `cookies.txt` (fabricshoot login).
-- `RCLONE_TOKEN` – the JSON token from `rclone authorize "drive"` signed in as fabricshoot.
-- `DRIVE_FOLDER_ID` – ID of the Drive folder `BNB` (kept secret so it never appears in public logs).
+## Adding a source
+Add a line to `sources.txt`, e.g.
+
+    instagram | someusername
+    pinterest | https://www.pinterest.com/name/board-name/
+    pinterest | https://www.pinterest.com/search/pins/?q=ikat%20print | | 300
+
+Pinterest searches are endless, so they are capped at 300 new pins per run
+unless a different limit is given.
+
+## Secrets (Settings -> Secrets and variables -> Actions)
+- `IG_COOKIES` - text of an exported Instagram `cookies.txt` (fabricshoot login).
+- `RCLONE_TOKEN` - the full `{...}` JSON line from `rclone authorize "drive"`
+  signed in as fabricshoot (must include `refresh_token`).
 
 ## Status
-`status.txt` in the Drive folder shows the last run. `flag: LOGIN_EXPIRED` means
-the Instagram cookies need re-exporting; everything else retries on the next run.
-
-## Adding a profile
-Add the username (no @) on a new line in `profiles.txt`. Its posts go to a Drive folder
-with the same name inside `BNB`; the 40-minute hourly budget is shared between profiles.
+`Reference Downloads/_system/status.txt` in Drive shows the last run.
+`flag: LOGIN_EXPIRED` means the Instagram cookies need re-exporting;
+`DRIVE_UPLOAD_FAILED` means `RCLONE_TOKEN` is wrong. Everything else retries.

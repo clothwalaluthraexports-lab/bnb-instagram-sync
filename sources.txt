@@ -1,0 +1,9 @@
+# One source per line:   platform | what | Drive folder (optional) | max items per run (optional)
+#   platform: instagram  -> what = username (no @)
+#             pinterest  -> what = a board/pin/search link, e.g. https://www.pinterest.com/name/board-name/
+#                                  or https://www.pinterest.com/search/pins/?q=ikat%20print
+# Drive folder is a path from the top of fabricshoot "My Drive". If left empty:
+#   instagram -> Reference Downloads/Instagram - <username>
+#   pinterest -> Reference Downloads/Pinterest - <board or search words>
+# Lines starting with # are ignored.
+instagram | bnbbutixfabric | instagram page post   trending post nov 2026/BNB/images

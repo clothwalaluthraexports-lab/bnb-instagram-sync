@@ -1,4 +1,4 @@
-name: BNB Instagram sync
+name: Reference image sync
 
 on:
   schedule:
@@ -13,8 +13,6 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 58
-    env:
-      DRIVE_ROOT: ${{ secrets.DRIVE_FOLDER_ID }}
     steps:
       - uses: actions/checkout@v4
 

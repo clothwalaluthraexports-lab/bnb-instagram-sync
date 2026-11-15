@@ -3,7 +3,6 @@
 set -euo pipefail
 [ -n "${IG_COOKIES:-}" ] || { echo "::error::Missing secret IG_COOKIES"; exit 1; }
 [ -n "${RCLONE_TOKEN:-}" ] || { echo "::error::Missing secret RCLONE_TOKEN"; exit 1; }
-[ -n "${DRIVE_ROOT:-}" ] || { echo "::error::Missing secret DRIVE_FOLDER_ID"; exit 1; }
 printf '%s\n' "$IG_COOKIES" > "$RUNNER_TEMP/ig-cookies.txt"
 # The token must be the full {"access_token":...,"refresh_token":...} JSON line.
 TOKEN=$(printf '%s' "$RCLONE_TOKEN" | tr -d '\r\n' | grep -o '{.*}' || true)
@@ -15,5 +14,4 @@ cat > ~/.config/rclone/rclone.conf <<CONF
 type = drive
 scope = drive
 token = ${TOKEN}
-root_folder_id = ${DRIVE_ROOT}
 CONF

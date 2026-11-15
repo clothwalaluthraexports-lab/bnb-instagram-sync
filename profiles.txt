@@ -1,4 +1,0 @@
-# One Instagram username per line (no @). Lines starting with # are ignored.
-# Each profile is saved to its own folder in the Drive "BNB" folder.
-# (bnbbutixfabric keeps its original "images" folder.)
-bnbbutixfabric
