@@ -25,6 +25,11 @@ def parse(text):
             pass
     m = re.search(r"\{.*\}", text, re.S)
     return json.loads(m.group(0)) if m else None
+# A copy that started inside the line (at ya29...) lost its opening {"access_token":"
+if raw.startswith("ya29") and "refresh_token" in raw:
+    raw = "{\"access_token\":\"" + raw
+    if not raw.rstrip().endswith("}"):
+        raw = raw.rstrip() + "}"
 t = parse(raw)
 for _ in range(3):
     if isinstance(t, dict) and "token" in t and "refresh_token" not in t:
