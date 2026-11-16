@@ -5,5 +5,7 @@
 # Drive folder is a path from the top of fabricshoot "My Drive". If left empty:
 #   instagram -> Reference Downloads/Instagram - <username>
 #   pinterest -> Reference Downloads/Pinterest - <board or search words>
+#   Or write id:<Drive folder id> to upload into that exact folder (used for bnbbutixfabric,
+#   whose folder "instagram page post   trending post nov 2026/BNB/images" is not in My Drive top).
 # Lines starting with # are ignored.
-instagram | bnbbutixfabric | instagram page post   trending post nov 2026/BNB/images
+instagram | bnbbutixfabric | id:1bF0KW9KAJQLPA3TZ4wL0-Csw4EgcYdMA

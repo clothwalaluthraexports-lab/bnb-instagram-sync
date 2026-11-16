@@ -48,10 +48,14 @@ for LINE in "${LINES[@]}"; do
   IMG=$(find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.png' \) | wc -l)
   VID=$(find "$OUT" -type f \( -iname '*.mp4' -o -iname '*.webm' \) | wc -l)
   echo "$NAME -> $DEST: exit $CODE, images $IMG, videos $VID  (124 = time share used up, normal)" | tee -a summary.txt
-  rclone copy "$OUT" "gdrive:$DEST" --transfers 8 --ignore-existing || echo "UPLOAD_FAILED $NAME" >> drive_error
+  # A destination written as "id:<Drive folder id>" uploads straight into that
+  # exact folder (a name path can resolve to a new look-alike folder instead).
+  if [[ "$DEST" == id:* ]]; then TARGET="gdrive,root_folder_id=${DEST#id:}:"; else TARGET="gdrive:$DEST"; fi
+  rclone copy "$OUT" "$TARGET" --transfers 8 --ignore-existing || echo "UPLOAD_FAILED $NAME" >> drive_error
   # Record which Drive folder (id) received the files and how many it now holds.
-  FID=$(rclone lsjson --stat "gdrive:$DEST" 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("ID","?"))' 2>/dev/null || echo "?")
-  CNT=$(rclone lsf "gdrive:$DEST" --files-only 2>/dev/null | wc -l)
+  if [[ "$DEST" == id:* ]]; then FID="${DEST#id:}"; else
+  FID=$(rclone lsjson --stat "gdrive:$DEST" 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("ID","?"))' 2>/dev/null || echo "?"); fi
+  CNT=$(rclone lsf "$TARGET" --files-only 2>/dev/null | wc -l)
   echo "  uploaded to Drive folder id $FID, now $CNT files" | tee -a summary.txt
   rclone copyto archive.sqlite3 "gdrive:$SYS/archive.sqlite3" 2>/dev/null
   rm -rf "$OUT"   # free runner disk before the next source
